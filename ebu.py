@@ -69,10 +69,11 @@ def BuildStatusBits():
     time.sleep(0.5)
 
     if mode == '2':
-        print("Write the 0 status byte (i.e. 01110010)")
-        ZeroByte = input()
-        StatusList = InsertInStatusList(StatusList, ZeroByte, 0)
-        print(StatusList)
+        for bit in range(3):
+            print("Write the " + str(bit) + " status byte (i.e. 01110010)")
+            ZeroByte = input()
+            StatusList = InsertInStatusList(StatusList, ZeroByte, bit)
+            print(StatusList)
 
 
 if __name__ == "__main__":
