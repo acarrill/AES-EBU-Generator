@@ -49,9 +49,6 @@ def CreateBlock(audio):
 
     SamplesCursor = audio.tell()
     while SamplesCursor != NumSamples:
-        print(SamplesCursor)
-        print(StatusCursor)
-        print(len(FrameList))
         if len(FrameList) == 192:  # Each 192 frames
             print("what is love")
             BlockList.append(FrameList)
