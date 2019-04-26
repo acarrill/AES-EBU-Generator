@@ -3,8 +3,13 @@ import numpy as np
 import soundfile as sf # MAYBE IT WONT BE USED ////// REMEMBER DELETE IF NOT
 import wave as wv
 import sys
+import time
 
 def CreateFrame (AudioSampleX, AudioSampleY):
+    """
+    Crate a frame (the first frame must have been created before use this def)
+    """
+
     SubFrameX = [b'0xD2', AudioSampleX, 1, 0, 0, 1]
     SubFrameY = [b'0xD4', AudioSampleY, 1, 0, 0, 1]
     Frame = [SubFrameX, SubFrameY]
@@ -15,7 +20,7 @@ def CreateBlock(audio):
     Crea una subtrama por defecto
     """
 
-    AudioWidht = audio.getsampwidth()  # In bytes
+    AudioWidht = audio.getsampwidth()  # Number of bytes
     FrameList = []
     BlockList = []
     SamplesCursor = audio.tell()  # Cursor inside audio file
@@ -34,13 +39,38 @@ def CreateBlock(audio):
             AudioSamples = audio.readframes(2)
             Frame = CreateFrame(AudioSamples[0:2], AudioSamples[2:5])
             FrameList.append(Frame)
-            SamplesCursor = audio.tell()
-            print(SamplesCursor)
+            SamplesCursor = audio.tell()  # Update cursor
 
         return FrameList
 
+def BuildStatusBits():
+    """
+    This function interact with the user for archieve the needed information
+    about status bits impelementation
+    """
+
+    StatusBits = np.zeros(192)  # default all 0
+
+    print ("Select a impelementation of status bits:" + '\n'
+            + '1: Minimum' + '\n'
+            + '2: Stantard' + '\n'
+            + '3: Enhanced')
+    mode = input()
+
+    print("If the impelementation chosen it's needed of extra information "
+            + "it will be asked byte by byte like input")
+    time.sleep(3.5)
+    print(StatusBits)
+
+    if mode == 2:
+        print("Write the 0 status byte (i.e. 01110010)")
+        ZeroByte = input()
+
 
 if __name__ == "__main__":
+
+    BuildStatusBits()
+
 
     try:
         AudioData = sys.argv[1]
