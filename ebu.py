@@ -43,13 +43,20 @@ def CreateBlock(audio):
 
         return FrameList
 
+def InsertInStatusList(statusList, statusByte, statusByteNum):
+    index = statusByteNum * 8
+    for bit in statusByte:
+        statusList[index] = bit
+        index += 1
+    return statusList
+
 def BuildStatusBits():
     """
     This function interact with the user for archieve the needed information
     about status bits impelementation
     """
 
-    StatusBits = np.zeros(192)  # default all 0
+    StatusList = np.zeros(192)  # default all 0
 
     print ("Select a impelementation of status bits:" + '\n'
             + '1: Minimum' + '\n'
@@ -59,12 +66,13 @@ def BuildStatusBits():
 
     print("If the impelementation chosen it's needed of extra information "
             + "it will be asked byte by byte like input")
-    time.sleep(3.5)
-    print(StatusBits)
+    time.sleep(0.5)
 
-    if mode == 2:
+    if mode == '2':
         print("Write the 0 status byte (i.e. 01110010)")
         ZeroByte = input()
+        StatusList = InsertInStatusList(StatusList, ZeroByte, 0)
+        print(StatusList)
 
 
 if __name__ == "__main__":
@@ -81,7 +89,7 @@ if __name__ == "__main__":
 
         FrameList = CreateBlock(audio)
 
-        print(FrameList)
+        # print(FrameList)
 
 
 
