@@ -16,7 +16,7 @@ def CreateFrame (audioSampleX, audioSampleY, statusList, statusCursor, bitDepth)
             FirstSubFrame = [b'0xD2', audioSampleX, 1, 0, statusList[statusCursor], 1]
         SubFrameY = [b'0xD4', audioSampleY, 1, 0, statusList[statusCursor], 1]
         Frame = [FirstSubFrame, SubFrameY]
-    else:
+    else:  # Frame with less than 24 bits sample
         if statusCursor == 0:
             FirstSubFrame = [b'0xD8', b'0x0', audioSampleX, 1, 0, statusList[statusCursor], 1]
         else:
