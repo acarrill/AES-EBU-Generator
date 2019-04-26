@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import numpy as np
-import soundfile as sf # MAYBE IT WONT BE USED ////// REMEMBER DELETE IF NOT
 import wave as wv
 import sys
 import time
@@ -11,24 +10,24 @@ def CreateFrame (audioSampleX, audioSampleY, statusList, statusCursor, bitDepth)
     """
     if bitDepth == 3:
         if statusCursor == 0:
-            FirstSubFrame = [b'0xD8', audioSampleX, 1, 0, statusList[statusCursor], 1]
+            FirstSubFrame = [b'0xD8', audioSampleX, 1, 0, int(statusList[statusCursor]), 1]
         else:
-            FirstSubFrame = [b'0xD2', audioSampleX, 1, 0, statusList[statusCursor], 1]
-        SubFrameY = [b'0xD4', audioSampleY, 1, 0, statusList[statusCursor], 1]
+            FirstSubFrame = [b'0xD2', audioSampleX, 1, 0, int(statusList[statusCursor]), 1]
+        SubFrameY = [b'0xD4', audioSampleY, 1, 0, int(statusList[statusCursor]), 1]
         Frame = [FirstSubFrame, SubFrameY]
     else:  # Frame with less than 24 bits sample
         if statusCursor == 0:
-            FirstSubFrame = [b'0xD8', b'0x0', audioSampleX, 1, 0, statusList[statusCursor], 1]
+            FirstSubFrame = [b'0xD8', b'0x0', audioSampleX, 1, 0, int(statusList[statusCursor]), 1]
         else:
-            FirstSubFrame = [b'0xD2', b'0x0', audioSampleX, 1, 0, statusList[statusCursor], 1]
-        SubFrameY = [b'0xD4', b'0x0', audioSampleY, 1, 0, statusList[statusCursor], 1]
+            FirstSubFrame = [b'0xD2', b'0x0', audioSampleX, 1, 0, int(statusList[statusCursor]), 1]
+        SubFrameY = [b'0xD4', b'0x0', audioSampleY, 1, 0, int(statusList[statusCursor]), 1]
         Frame = [FirstSubFrame, SubFrameY]
     print(Frame)
     return Frame
 
 def CreateBlock(audio):
     """
-    Crea una subtrama por defecto
+    Create a list of blocks with all the samples of the audio
     """
 
     BitDepth = audio.getsampwidth()  # Number of bytes
@@ -49,7 +48,7 @@ def CreateBlock(audio):
 
     SamplesCursor = audio.tell()
     while SamplesCursor != NumSamples:
-        if len(FrameList) == 192:  # Each 192 frames
+        if len(FrameList) == 192:  # Each 192 frames we introduce a block
             print("what is love")
             BlockList.append(FrameList)
             FrameList = []
@@ -62,7 +61,7 @@ def CreateBlock(audio):
 
         AudioSamples = audio.readframes(2)
         Frame = CreateFrame(AudioSamples[0:2], AudioSamples[2:5],
-                                StatusList, StatusCursor, BitDepth)
+                            StatusList, StatusCursor, BitDepth)
         StatusCursor += 1
         FrameList.append(Frame)
         SamplesCursor = audio.tell()  # Update cursor
@@ -101,8 +100,8 @@ def BuildStatusBits():
             for bit in range(3,23):
                 if bit != 5:  # Byte 5 must be set to logic 0
                     print("Write the " + str(bit) + " status byte (i.e. 01110010)")
-                    ZeroByte = input()
-                    StatusList = InsertInStatusList(StatusList, ZeroByte, bit)
+                    StatusByte = input()
+                    StatusList = InsertInStatusList(StatusList, StatusByte, bit)
 
     return StatusList
 
@@ -117,4 +116,3 @@ if __name__ == "__main__":
 
         BlockList = CreateBlock(audio)
         print(BlockList)
-        # print(FrameList)
