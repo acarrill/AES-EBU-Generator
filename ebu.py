@@ -63,19 +63,22 @@ def BuildStatusBits():
             + '2: Stantard' + '\n'
             + '3: Enhanced')
     mode = int(input())
-
     print("If the impelementation chosen it's needed of extra information "
             + "it will be asked byte by byte like input")
-    time.sleep(0.5)
 
     if mode >= 2:
         for bit in range(3):
             print("Write the " + str(bit) + " status byte (i.e. 01110010)")
             ZeroByte = input()
             StatusList = InsertInStatusList(StatusList, ZeroByte, bit)
-            print(StatusList)
-        # if mode
+        if mode == 3:
+            for bit in range(3,23):
+                if bit != 5:  # Byte 5 must be set to logic 0
+                    print("Write the " + str(bit) + " status byte (i.e. 01110010)")
+                    ZeroByte = input()
+                    StatusList = InsertInStatusList(StatusList, ZeroByte, bit)
 
+    return StatusList
 
 if __name__ == "__main__":
 
